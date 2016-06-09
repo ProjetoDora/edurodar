@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/ProjetoDora/edurodar/issues"
   },
-  "homepage": "https://github.com/ProjetoDora/edurodar#readme"
+  "homepage": "https://github.com/ProjetoDora/edurodar#readme",
+  "dependencies":{
+    "express": "^4.13.4"
+  },
+  "devDependencies": {
+  }
 }
