@@ -16,9 +16,14 @@
     "url": "https://github.com/ProjetoDora/edurodar/issues"
   },
   "homepage": "https://github.com/ProjetoDora/edurodar#readme",
-  "dependencies":{
+  "dependencies": {
     "express": "^4.13.4"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-spies": "^0.7.1",
+    "expect": "^1.20.1",
+    "mocha": "^2.5.3",
+    "mockery": "^1.7.0"
   }
 }
