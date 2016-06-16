@@ -5,17 +5,19 @@ class WebRunner {
     this.app = express()
   }
 
-  application() {
-    return this.app
-  }
-
   run(code, options = {}) {
-    const { port = 0 } = options;
+    const { port = 0 } = options
+    this.code = code
 
+    this.app.get('*', this.handleGet_.bind(this))
     this.app.listen(port)
 
     return this.app;
   }
+
+  handleGet_(request, response) {
+    eval(this.code)
+  }
 }
 
-module.exports = WebRunner;
+module.exports = WebRunner

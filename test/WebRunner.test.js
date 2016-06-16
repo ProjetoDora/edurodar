@@ -1,34 +1,64 @@
-const WebRunner = require('../src/web')
-
+const mockery = require('mockery')
 const chai = require('chai')
-const expect = require('expect')
-const express = require('express')
+const spies = require('chai-spies')
+const expect = chai.expect
+
+chai.use(spies)
 
 describe('Web Runner', () => {
+  let WebRunner, express
+  const code = 'envia("Olá")'
+
+  beforeEach(() => {
+    mockery.enable({
+      warnOnReplace: false,
+      warnOnUnregistered: false
+    })
+    express = chai.spy.object(['listen', 'get'])
+    mockery.registerMock('express', () => express)
+
+    WebRunner = require('../src/WebRunner')
+  })
+
+  afterEach(() => {
+    mockery.disable()
+  })
+
   describe('run', () => {
-    const code = 'envia("Olá")'
     let webRunner, app
 
     beforeEach(() => {
       webRunner = new WebRunner()
-      app = webRunner.application()
-
-      expect.spyOn(app, 'listen')
     })
 
     describe('porta', () => {
       it('escuta porta indicada', () => {
         webRunner.run(code, {port: 1234})
 
-        expect(app.listen).toHaveBeenCalledWith(1234)
+        expect(express.listen).to.have.been.called.with(1234)
       })
 
       it('usa porta zero como padrão, utilizando uma porta aleatória', () => {
         webRunner.run(code)
 
-        expect(app.listen).toHaveBeenCalledWith(0)
+        expect(express.listen).to.have.been.called.with(0)
       })
     })
 
+    describe('processando requisição', () => {
+      let handler
+
+      beforeEach(() => {
+        eval = chai.spy()
+
+        webRunner.run(code, {port: 1234})
+        handler = express.get.__spy.calls[0][1]
+      })
+
+      it('executa código', () => {
+        handler({}, {})
+        expect(eval).to.have.been.called.with(code)
+      })
+    })
   })
 })
