@@ -50,15 +50,17 @@ describe('Web Runner', () => {
 
       beforeEach(() => {
         eval = chai.spy()
-
         webRunner.run(code, {port: 1234})
+
         handler = express.get.__spy.calls[0][1]
+        handler({}, {send: () => {}})
       })
 
       it('executa código', () => {
-        handler({}, {})
         expect(eval).to.have.been.called.with(code)
       })
+
+      it('cria um apelido para "send"')
     })
   })
 })

@@ -16,6 +16,7 @@ class WebRunner {
   }
 
   handleGet_(request, response) {
+    const envia = response.send.bind(response)
     eval(this.code)
   }
 }
