@@ -1,1 +1,1 @@
-module.exports require('./src/WebRunner')
+module.exports = require('./src/WebRunner')
