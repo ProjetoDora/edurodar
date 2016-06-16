@@ -11,13 +11,15 @@ class WebRunner {
 
     this.app.get('*', this.handleGet_.bind(this))
     this.app.listen(port)
-
-    return this.app;
   }
 
   handleGet_(request, response) {
     const envia = response.send.bind(response)
     eval(this.code)
+  }
+
+  stop() {
+    this.app.close()
   }
 }
 

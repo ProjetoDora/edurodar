@@ -6,7 +6,7 @@ const expect = chai.expect
 chai.use(spies)
 
 describe('Web Runner', () => {
-  let WebRunner, express
+  let WebRunner, webRunner, express
   const code = 'envia("Olá")'
 
   beforeEach(() => {
@@ -14,10 +14,11 @@ describe('Web Runner', () => {
       warnOnReplace: false,
       warnOnUnregistered: false
     })
-    express = chai.spy.object(['listen', 'get'])
+    express = chai.spy.object(['listen', 'get', 'close'])
     mockery.registerMock('express', () => express)
 
     WebRunner = require('../src/WebRunner')
+    webRunner = new WebRunner()
   })
 
   afterEach(() => {
@@ -25,12 +26,6 @@ describe('Web Runner', () => {
   })
 
   describe('run', () => {
-    let webRunner, app
-
-    beforeEach(() => {
-      webRunner = new WebRunner()
-    })
-
     describe('porta', () => {
       it('escuta porta indicada', () => {
         webRunner.run(code, {port: 1234})
@@ -61,6 +56,16 @@ describe('Web Runner', () => {
       })
 
       it('cria um apelido para "send"')
+    })
+  })
+
+  describe('stop', () => {
+    beforeEach(() => {
+      webRunner.stop()
+    })
+
+    it('encerrar servidor', () => {
+      expect(express.close).to.have.been.called();
     })
   })
 })
