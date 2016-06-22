@@ -1,26 +1,27 @@
 const express = require('express')
 
-class WebRunner {
-  constructor() {
-    this.app = express()
-  }
+const web = () => {
+  const app = express()
 
-  run(code, options = {}) {
-    const { port = 0 } = options
-    this.code = code
-
-    this.app.get('*', this.handleGet_.bind(this))
-    this.app.listen(port)
-  }
-
-  handleGet_(request, response) {
-    const envia = response.send.bind(response)
-    eval(this.code)
-  }
-
-  stop() {
-    this.app.close()
+  return {
+    run: run(app),
+    stop: stop(app)
   }
 }
 
-module.exports = WebRunner
+const run = (app) => (code, options = {}) => {
+  const { port = 0 } = options
+
+  app.get('*', handleGet_(code))
+  app.listen(port)
+}
+
+const handleGet_ = (code) => (request, response)  => {
+  const envia = response.send.bind(response)
+  eval(code)
+}
+
+const stop = (app) => () =>
+  app.close()
+
+module.exports = web

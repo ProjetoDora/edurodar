@@ -5,8 +5,8 @@ const expect = chai.expect
 
 chai.use(spies)
 
-describe('Web Runner', () => {
-  let WebRunner, webRunner, express
+describe('ambiente web', () => {
+  let web, express
   const code = 'envia("Olá")'
 
   beforeEach(() => {
@@ -17,8 +17,7 @@ describe('Web Runner', () => {
     express = chai.spy.object(['listen', 'get', 'close'])
     mockery.registerMock('express', () => express)
 
-    WebRunner = require('../src/WebRunner')
-    webRunner = new WebRunner()
+    web = require('../src/web')()
   })
 
   afterEach(() => {
@@ -28,13 +27,13 @@ describe('Web Runner', () => {
   describe('run', () => {
     describe('porta', () => {
       it('escuta porta indicada', () => {
-        webRunner.run(code, {port: 1234})
+        web.run(code, {port: 1234})
 
         expect(express.listen).to.have.been.called.with(1234)
       })
 
       it('usa porta zero como padrão, utilizando uma porta aleatória', () => {
-        webRunner.run(code)
+        web.run(code)
 
         expect(express.listen).to.have.been.called.with(0)
       })
@@ -45,7 +44,7 @@ describe('Web Runner', () => {
 
       beforeEach(() => {
         eval = chai.spy()
-        webRunner.run(code, {port: 1234})
+        web.run(code, {port: 1234})
 
         handler = express.get.__spy.calls[0][1]
         handler({}, {send: () => {}})
@@ -61,7 +60,7 @@ describe('Web Runner', () => {
 
   describe('stop', () => {
     beforeEach(() => {
-      webRunner.stop()
+      web.stop()
     })
 
     it('encerrar servidor', () => {
